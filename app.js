@@ -1,4 +1,4 @@
-var prompt = require('prompt');
+var prompt = require('readline-sync');
 
 var Game = function () {
   this.board = [
@@ -10,7 +10,7 @@ var Game = function () {
   this.moves = 0;
 };
 
-Game.prototype.move = function () {
+Game.prototype.move = function (row, col) {
   this.board[row][col] = this.player;
   this.moves++;
 };
@@ -19,11 +19,11 @@ Game.prototype.nextPlayer = function () {
   this.player = this.player === 'X' ? 'O' : 'X';
 };
 
-Game.prototype.printBoard = function (board) {
+Game.prototype.printBoard = function () {
   console.log('====================================');
-  console.log(board[0][0], '|', board[0][1], '|', board[0][2]);
-  console.log(board[1][0], '|', board[1][1], '|', board[1][2]);
-  console.log(board[2][0], '|', board[2][1], '|', board[2][2]);
+  console.log(this.board[0][0], '|', this.board[0][1], '|', this.board[0][2]);
+  console.log(this.board[1][0], '|', this.board[1][1], '|', this.board[1][2]);
+  console.log(this.board[2][0], '|', this.board[2][1], '|', this.board[2][2]);
   console.log('====================================');
 };
 
@@ -83,11 +83,12 @@ Game.prototype.printWinner = function() {
 };
 
 Game.prototype.getMove = function() {
-  var move; 
-  while (this.isInvalidMove(move)) {
-    move = prompt.question(`Player ${this.player}, it's your turn! Please choose a move (1-9): `);
-  } 
-  return this.makeMove(move);
+  var move = prompt.question(`Player ${this.player}, it's your turn! Please choose a move (1-9): `);
+  if (this.isInvalidMove(move)) {
+    this.getMove();
+  } else {
+    return this.makeMove(move);
+  }
 };
 
 Game.prototype.play = function() {
@@ -104,4 +105,5 @@ Game.prototype.play = function() {
   }
 };
 
-
+var game = new Game();
+game.play();
