@@ -54,18 +54,33 @@ Game.prototype.isInvalidMove = function (move) {
   }
 };
 
+Game.prototype.areAllEqual = function(a, b, c) {
+  return a === b && b === c;
+};
 
+Game.prototype.isRowWinner = function(row) {
+  return this.areAllEqual(this.board[row][0], this.board[row][1], this.board[row][2]);
+};
 
+Game.prototype.isColWinner = function(col) {
+  return this.areAllEqual(this.board[0][col], this.board[1][col], this.board[2][col]);
+};
+
+Game.prototype.isDiagonalWinner = function() {
+  return this.areAllEqual(this.board[0][0], this.board[1][1], this.board[2][2]) || this.areAllEqual(this.board[0][2], this.board[1][1], this.board[2][0]);
+};
+
+Game.prototype.isWinner = function(row, col) {
+  return this.isRowWinner(row) || this.isColWinner(col) || this.isDiagonalWinner();
+};
 
 Game.prototype.isDraw = function () {
   return this.moves === 9;
 };
 
-Game.prototype.winner = function() {
+Game.prototype.printWinner = function() {
   console.log(`Congratulations, ${this.player}, you've won!`);
 };
-
-
 
 Game.prototype.getMove = function() {
   var move; 
@@ -74,3 +89,19 @@ Game.prototype.getMove = function() {
   } 
   return this.makeMove(move);
 };
+
+Game.prototype.play = function() {
+  this.printBoard();
+  var {row, col} = this.getMove();
+  this.move(row, col);
+  if (this.isWinner(row, col)) {
+    this.printWinner();
+  } else if (this.isDraw()) {
+    console.log( 'It\'s a draw' );
+  } else {
+    this.nextPlayer();
+    this.play();
+  }
+};
+
+
