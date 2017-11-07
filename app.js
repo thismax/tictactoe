@@ -17,3 +17,7 @@ Game.prototype.printBoard = function(board) {
   console.log(board[2][0], '|', board[2][1],'|', board[2][2]);
   console.log('====================================')
 };
+
+Game.prototype.isDraw = function() {
+  return this.moves === 9;
+};
